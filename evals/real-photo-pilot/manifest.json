@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "labelStatus": "Codex visual preliminary annotation before model inference; not independently reviewed by Mei Feiyu",
+  "scope": "Three public CC0 real photographs; no campus-user photos; no statistical accuracy claim",
+  "cases": [
+    {
+      "id": "bottle",
+      "file": "images/bottle.jpg",
+      "sha256": "c9abd3d9ca8bdb62c8613329a4a9e595c8d5e7d862f4611b26133b7399b44448",
+      "provenance": {
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://commons.wikimedia.org/wiki/File:Close_view_of_a_water_bottle.jpg",
+        "author": "Jessephu",
+        "reviewed": true,
+        "reviewedAt": "2026-10-24"
+      },
+      "expected": {
+        "category": {
+          "visible": true,
+          "accepted": [
+            "水杯"
+          ]
+        },
+        "color": {
+          "visible": true,
+          "accepted": [
+            "透明",
+            "无色"
+          ]
+        },
+        "brand": {
+          "visible": false,
+          "accepted": []
+        }
+      },
+      "annotationNote": "俯视瓶内，蓝色标签不是主体颜色；没有可确认的品牌文字。"
+    },
+    {
+      "id": "umbrella",
+      "file": "images/umbrella.jpg",
+      "sha256": "e1446ccbb590a8d06c926281dad46657fceebc1be68942e6679dc6f01037db6a",
+      "provenance": {
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://commons.wikimedia.org/wiki/File:Folded_Umbrella.jpg",
+        "author": "Swethasakthivel",
+        "reviewed": true,
+        "reviewedAt": "2026-10-24"
+      },
+      "expected": {
+        "category": {
+          "visible": true,
+          "accepted": [
+            "雨伞"
+          ]
+        },
+        "color": {
+          "visible": true,
+          "accepted": [
+            "棕色",
+            "棕褐色",
+            "褐色",
+            "棕黄色"
+          ]
+        },
+        "brand": {
+          "visible": false,
+          "accepted": []
+        }
+      },
+      "annotationNote": "棕色折叠伞，蓝色为背景，黄色手柄与伞布分开；未见可读品牌。"
+    },
+    {
+      "id": "keys",
+      "file": "images/keys.jpg",
+      "sha256": "a780e959480a21e29ed6cd75f42a343aab1d5e16371d4d9073af08111c64c22e",
+      "provenance": {
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://commons.wikimedia.org/wiki/File:Keys_with_pink_background.JPG",
+        "author": "Eviatar Bach",
+        "reviewed": true,
+        "reviewedAt": "2026-10-24"
+      },
+      "expected": {
+        "category": {
+          "visible": true,
+          "accepted": [
+            "钥匙"
+          ]
+        },
+        "color": {
+          "visible": false,
+          "accepted": [],
+          "scored": false
+        },
+        "brand": {
+          "visible": false,
+          "accepted": [],
+          "scored": false
+        }
+      },
+      "annotationNote": "多把不同材质、颜色的钥匙，没有唯一主体颜色；黑色柄上缩写不足以确认整体品牌，两字段留待人工复核。"
+    }
+  ]
+}

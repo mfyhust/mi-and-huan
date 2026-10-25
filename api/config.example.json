@@ -1,0 +1,10 @@
+{
+  "provider": "sjtu",
+  "model": "deepseek-chat",
+  "visionModel": "qwen3.8-27b",
+  "allowedModels": [
+    "deepseek-chat",
+    "qwen3.8-27b"
+  ],
+  "key": ""
+}

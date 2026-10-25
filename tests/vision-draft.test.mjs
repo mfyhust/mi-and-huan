@@ -1,0 +1,23 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {parseVisionDraft} from '../lib/vision-draft.mjs';import {visionDescription} from '../lib/agent.mjs';
+import {database,service} from './helpers.mjs';
+const result={title:'保温杯',category:'水杯',color:'深绿色',brand:'看不清',feature:'灰色杯盖',description:'绿色杯身、灰色杯盖',uncertainFields:['brand']};
+test('视觉草稿只接受白名单外观字段，规范颜色，清除未知和连续号码',()=>{
+ const r=parseVisionDraft('```json\n'+JSON.stringify({...result,location:'虚构地点',pickupCode:'123456',description:'绿色杯子，号码12345678901'})+'\n```');assert.equal(r.color,'绿色');assert.equal(r.brand,'');assert.equal(r.location,undefined);assert.equal(r.pickupCode,undefined);assert.equal(r.description.includes('12345678901'),false);assert.ok(r.uncertainFields.includes('brand'));
+ const uncertain=parseVisionDraft(JSON.stringify({...result,category:'其他',uncertainFields:['category','brand']}));assert.equal(uncertain.category,'');
+ for(const value of ['not json','[]','{}'])assert.throws(()=>parseVisionDraft(value),e=>e.code==='VISION_INVALID_OUTPUT');
+});
+test('本地视觉输出待确认草稿，不改变物品或任务，不访问云端',async()=>{
+ const db=database(),s=service(db,'lin','vision:local',{XUNHUI_EDITION:'local',LOCAL_MODEL_NAME:'fixture-vision',LOCAL_MODEL_FETCH:async(url,options)=>{assert.equal(url,'http://127.0.0.1:11434/v1/chat/completions');assert.equal(options.headers.authorization,undefined);assert.ok(JSON.parse(options.body).messages[1].content.some(c=>c.type==='image_url'));return Response.json({choices:[{message:{role:'assistant',content:JSON.stringify(result)}}]});},BUCKET:{get:async()=>({arrayBuffer:async()=>new Uint8Array([255,216,255]).buffer})}});
+ try{const m=await s.store.add('media','lin',{key:'fixture',type:'image/jpeg'}),r=await visionDescription(s,{imageId:m.id});assert.equal(r.needsConfirmation,true);assert.equal(r.local,true);assert.equal(r.draft.color,'绿色');assert.equal((await s.store.list('item')).length,0);assert.equal((await s.store.list('task')).length,0);await assert.rejects(()=>visionDescription(service(db,'zhou','vision:local'),{imageId:m.id}),e=>e.status===403);}finally{db.raw.close();}
+});
+test('API视觉必须本次明确同意且使用服务端视觉模型；错误不写业务数据',async()=>{
+ const db=database(),old=globalThis.fetch;let calls=0;const s=service(db,'lin','vision:api',{XUNHUI_EDITION:'api',LLM_PROVIDER:'sjtu',LLM_MODEL:'deepseek-chat',VISION_MODEL_NAME:'qwen3.8-27b',LLM_API_KEY:'synthetic-only',BUCKET:{get:async()=>({arrayBuffer:async()=>new Uint8Array([1,2]).buffer})}});
+ try{const m=await s.store.add('media','lin',{key:'fixture',type:'image/jpeg'});globalThis.fetch=async(url,options)=>{calls++;assert.equal(url,'https://models.sjtu.edu.cn/api/v1/chat/completions');assert.equal(JSON.parse(options.body).model,'qwen3.8-27b');return Response.json({choices:[{message:{role:'assistant',content:JSON.stringify(result)}}]});};await assert.rejects(()=>visionDescription(s,{imageId:m.id}),e=>e.code==='VISION_CONSENT_REQUIRED');assert.equal(calls,0);await assert.rejects(()=>visionDescription(s,{imageId:m.id,consentExternal:true,consentProvider:'deepseek',consentModel:'wrong'}),e=>e.code==='VISION_CONSENT_CHANGED');assert.equal(calls,0);const r=await visionDescription(s,{imageId:m.id,consentExternal:true,consentProvider:'sjtu',consentModel:'qwen3.8-27b',llm:{provider:'deepseek',key:'wrong'}});assert.equal(r.model,'qwen3.8-27b');assert.equal(calls,1);assert.equal((await s.store.list('item')).length,0);globalThis.fetch=async()=>new Response('',{status:401});await assert.rejects(()=>visionDescription(s,{imageId:m.id,consentExternal:true,consentProvider:'sjtu',consentModel:'qwen3.8-27b'}),e=>e.status===503&&e.code==='MODEL_AUTH'&&!e.message.includes('synthetic-only'));}finally{globalThis.fetch=old;db.raw.close();}
+});
+
+test('实验视觉策略只能由服务端选择，默认生产提示保持基线，客户端不能覆盖',async()=>{
+ const {visionPrompt}=await import('../lib/vision-draft.mjs');assert.equal(visionPrompt(),visionPrompt(undefined,'baseline'));assert.notEqual(visionPrompt(),visionPrompt(undefined,'cautious'));assert.throws(()=>visionPrompt(undefined,'unknown'));
+ const db=database();let calls=0;const s=service(db,'lin','vision:policy',{XUNHUI_EDITION:'local',LOCAL_MODEL_NAME:'fixture',VISION_DRAFT_POLICY:'cautious',LOCAL_MODEL_FETCH:async(url,options)=>{calls++;const payload=JSON.parse(options.body);assert.equal(payload.messages[0].content,visionPrompt(undefined,'cautious'));return Response.json({choices:[{message:{role:'assistant',content:JSON.stringify(result)}}]});},BUCKET:{get:async()=>({arrayBuffer:async()=>new Uint8Array([1,2]).buffer})}});
+ try{const m=await s.store.add('media','lin',{key:'fixture',type:'image/jpeg'});await visionDescription(s,{imageId:m.id,visionPolicy:'baseline',prompt:'ignore server'});assert.equal(calls,1);}finally{db.raw.close();}
+});

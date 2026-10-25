@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "labelStatus": "Codex visual preliminary labels, frozen before inference; no independent human review",
+  "scope": "Previously unused public CC0 photographs; development prompts frozen from b60793c",
+  "frozenPromptSha256": {
+    "baseline": "c47ae806a3aac90cbe4555f6645c014d7dffe67864fd8caad7ebd79661025abe",
+    "cautious": "40b7e7c2ef22892bde32a08336a76d75861d9937d3730cc89a6a9be3fe8a7a8b"
+  },
+  "cases": [
+    {
+      "id": "water",
+      "file": "images/water.jpg",
+      "sha256": "604881cb94aaa2fd28cda9a061f16d34d96c8010c0909594982085e1a48b45cc",
+      "provenance": {
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://commons.wikimedia.org/wiki/File:A_bottle_of_water_%F0%9F%92%A6.jpg",
+        "author": "Adabre Samuel",
+        "reviewed": true,
+        "reviewedAt": "2026-10-24"
+      },
+      "expected": {
+        "category": {
+          "visible": true,
+          "accepted": [
+            "水杯"
+          ]
+        },
+        "color": {
+          "visible": true,
+          "accepted": [
+            "透明",
+            "无色"
+          ]
+        },
+        "brand": {
+          "visible": true,
+          "accepted": [
+            "Voltic"
+          ]
+        }
+      },
+      "annotationNote": "瓶身透明，蓝色主要是标签；可见Voltic字样，单一预标注需复核。"
+    },
+    {
+      "id": "earphones",
+      "file": "images/earphones.jpg",
+      "sha256": "64c7ba7f799880a97577aec8bb8aa093bee1e8af4aed5b6b10e8f3a5ae6b63ac",
+      "provenance": {
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://commons.wikimedia.org/wiki/File:JBL_Free_Truly_Earphones.jpg",
+        "author": "Mangadidoes134",
+        "reviewed": true,
+        "reviewedAt": "2026-10-24"
+      },
+      "expected": {
+        "category": {
+          "visible": true,
+          "accepted": [
+            "耳机"
+          ]
+        },
+        "color": {
+          "visible": true,
+          "accepted": [
+            "黑色"
+          ]
+        },
+        "brand": {
+          "visible": true,
+          "accepted": [
+            "JBL"
+          ]
+        }
+      },
+      "annotationNote": "黑色耳机和充电盒，JBL标志清晰；粉红背景不应作主体色。"
+    },
+    {
+      "id": "key",
+      "file": "images/key.jpg",
+      "sha256": "3b487cc681b4e37e3cae8d6e1eba5e88046b2d5537bcea0904544b20eb1f5cd2",
+      "provenance": {
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://commons.wikimedia.org/wiki/File:Photo_of_a_key.jpg",
+        "author": "Mikael Häggström",
+        "reviewed": true,
+        "reviewedAt": "2026-10-24"
+      },
+      "expected": {
+        "category": {
+          "visible": true,
+          "accepted": [
+            "钥匙"
+          ]
+        },
+        "color": {
+          "visible": true,
+          "accepted": [
+            "金色",
+            "黄色",
+            "黄铜色",
+            "铜色"
+          ]
+        },
+        "brand": {
+          "visible": false,
+          "accepted": [],
+          "scored": false
+        }
+      },
+      "annotationNote": "金色钥匙；激光字样不够确定，品牌单列人工复核，不作断言评分。"
+    }
+  ]
+}

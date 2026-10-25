@@ -1,0 +1,15 @@
+import {existsSync} from 'node:fs';
+import {join} from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {totalmem,freemem} from 'node:os';
+import {ROOT,readConfig,configPath} from './server.mjs';
+import {ollamaBinary} from './runtime-path.mjs';
+const config=readConfig(configPath());
+const binary=spawnSync(ollamaBinary(),['--version'],{encoding:'utf8',timeout:5000});
+const gpu=spawnSync('nvidia-smi',['--query-gpu=name,memory.total','--format=csv,noheader'],{encoding:'utf8',timeout:5000});
+const executable=result=>['EPERM','EACCES'].includes(result.error?.code)?null:!result.error&&result.status===0;
+const report={node:process.versions.node,memoryGiB:Math.round(totalmem()/1024**3),freeMemoryGiB:Math.round(freemem()/1024**3),frontendBuilt:existsSync(join(ROOT,'dist-offline','index.html')),model:config.model,ollamaExecutable:executable(binary),runnerCheckError:binary.error?.code||null,gpuDriverWorking:executable(gpu),gpuCheckError:gpu.error?.code||null,identity:'本机个人工作区，不依赖在线登录',modelInferenceTested:false,fullyOfflineAccepted:false};
+console.log(JSON.stringify(report,null,2));
+if(!report.frontendBuilt)console.log('下一步：先运行 npm run build:offline。');
+if(report.ollamaExecutable===false)console.log('未找到可运行的Ollama；需要单独准备运行器及模型权重，不会自动安装或下载。');
+if(report.ollamaExecutable===null)console.log('当前环境阻止运行版本检查，不能据此判断运行器缺失；请在正常本机终端复核。');
