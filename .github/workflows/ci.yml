@@ -7,8 +7,12 @@ permissions:
   contents: read
 jobs:
   verify:
-    runs-on: ubuntu-22.04
-    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,3 +23,4 @@ jobs:
       - run: npm run verify
       - run: npm run build:api-static
       - run: npm run build:offline
+      - run: node scripts/check-desktop.mjs

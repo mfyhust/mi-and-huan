@@ -50,3 +50,5 @@ import './api-journey-eval.test.mjs';
 import './api-pressure.test.mjs';
 
 import './location-support.test.mjs';
+
+import './desktop-runtime.test.mjs';

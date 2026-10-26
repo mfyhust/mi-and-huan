@@ -91,6 +91,9 @@ __pycache__/
 # Per-visitor remote demo workspaces (never deliver or upload).
 /.remote-data/
 
+# Platform-specific desktop packaging cache; never publish binaries.
+/.windows-runtime/
+
 # Local binaries and model artifacts, never publish.
 /.runtime/
 /runtime/
