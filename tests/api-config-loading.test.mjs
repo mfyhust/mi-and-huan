@@ -12,9 +12,9 @@ test('独立API和校内API共同读取受保护默认配置，显式路径优�
   assert.equal(apiConfigPath(undefined,root),target);assert.equal(readApiConfig(apiConfigPath(undefined,root)).key,secret);assert.equal(apiConfigPath('/missing/explicit.json',root),'/missing/explicit.json');assert.throws(()=>readApiConfig(apiConfigPath('/missing/explicit.json',root)));
  }finally{rmSync(root,{recursive:true});}
 });
-test('交大配置导入不输出密钥、限制平台、写入600且拒绝覆盖',()=>{
+test('交大配置导入不输出密钥、限制平台、POSIX写入600且拒绝覆盖',()=>{
  const root=mkdtempSync(join(tmpdir(),'migui-sjtu-import-')),source=join(root,'source.env'),target=join(root,'config.json');try{
-  writeFileSync(source,valid);const result=importSjtuConfig({source,target});assert.equal(result.configured,true);assert.equal(JSON.stringify(result).includes(secret),false);assert.equal(readApiConfig(target).key,secret);assert.equal(statSync(target).mode&0o777,0o600);
+  writeFileSync(source,valid);const result=importSjtuConfig({source,target});assert.equal(result.configured,true);assert.equal(JSON.stringify(result).includes(secret),false);assert.equal(readApiConfig(target).key,secret);if(process.platform!=='win32')assert.equal(statSync(target).mode&0o777,0o600);else assert.ok(statSync(target).isFile()); // NTFS ACLs are not POSIX permission bits.
   const before=readFileSync(target,'utf8');assert.throws(()=>importSjtuConfig({source,target}),/未覆盖/);assert.equal(readFileSync(target,'utf8'),before);
  }finally{rmSync(root,{recursive:true});}
 });
