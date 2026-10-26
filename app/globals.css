@@ -60,3 +60,24 @@
 .auth-expired{padding:12px 24px;background:#fff0dc;color:#85551e;font-size:13px}.auth-expired a{text-decoration:underline;font-weight:600}
 
 .candidate-question{margin:12px 0;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:#f1f6ef;font-size:12px}.candidate-question p{line-height:1.8;margin:8px 0}.candidate-question>div{display:flex;flex-wrap:wrap;gap:8px}.candidate-question button{padding:6px 12px;font-size:12px}.candidate-question small{display:block;margin-top:8px;color:var(--muted);line-height:1.7}
+
+/* Optional campus location controls and human support mailbox. */
+.campus-location-field>select,.campus-location-field>input{width:100%;min-width:0;margin-bottom:7px}
+.campus-location-field>small{display:block;color:var(--muted,#67786c);font-size:12px;line-height:1.6}
+.search-place-picker{margin-bottom:8px;font-size:13px}
+.search-place-picker summary{cursor:pointer;padding:5px 0;color:#315e4d}
+.search-place-picker[open]{max-height:240px;overflow:auto;padding:0 4px 6px}
+.search-place-picker .campus-location-field{margin:5px 0}
+.support-layout{display:grid;grid-template-columns:minmax(250px,.85fr) minmax(0,1.4fr);gap:24px;align-items:start}
+.support-form,.support-card{padding:24px}
+.support-form p{font-size:13px;line-height:1.7;color:#617168}
+.support-layout label{display:flex;flex-direction:column;gap:8px;margin:15px 0;font-size:13px}
+.support-layout input,.support-layout textarea{width:100%;padding:11px;border:1px solid #d7dfd5;border-radius:9px;background:#fff;box-sizing:border-box}
+.support-layout textarea{resize:vertical;font:inherit;min-height:75px}
+.support-list{display:grid;gap:16px;min-width:0}
+.support-list h2{font-size:19px}.support-card h3{margin:0;font-size:16px}
+.support-card .section-heading{margin-bottom:9px;gap:12px}.support-card small{font-size:11px;color:#617168}
+.support-content{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.8}
+.support-reply{padding:12px 15px;background:#edf3ec;border-radius:9px;margin-top:12px}
+.support-reply small{display:block;margin-top:5px}
+@media(max-width:850px){.support-layout{grid-template-columns:1fr}.support-form,.support-card{padding:18px}}

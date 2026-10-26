@@ -1,6 +1,6 @@
 {
   "name": "xunhui-campus-agent",
-  "version": "1.2.0-rc.2",
+  "version": "1.2.0-rc.3",
   "private": true,
   "engines": {
     "node": ">=22.13.0"

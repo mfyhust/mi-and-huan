@@ -48,3 +48,5 @@ import './photo-pilot.test.mjs';
 import './question-policy.test.mjs';
 import './api-journey-eval.test.mjs';
 import './api-pressure.test.mjs';
+
+import './location-support.test.mjs';

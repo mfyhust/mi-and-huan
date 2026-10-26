@@ -90,7 +90,7 @@ export function createRemoteDemo({origin,code,edition='local',dataDir=join(ROOT,
    if(!pending){
     if(sessions.size+opening.size>=maxSessions)return reply('当前在线空间已满，请稍后再试。',429);
     pending=(async()=>{
-     const options={dataDir:join(dataDir,'registered',edition,user.id),assetsDir,apiConfig,model,community:{...community,user}};
+     const options={dataDir:join(dataDir,'registered',edition,user.id),assetsDir,apiConfig,model,community:{...community,user,adminConfigured:accounts.hasAdmin()}};
      const app=edition==='local'?createOfflineApp(options):createApiApp(options);
      const welcome=await app.dispatch(new Request('http://127.0.0.1/'));
      const internalCookie=welcome.headers.get('set-cookie')?.split(';')[0];

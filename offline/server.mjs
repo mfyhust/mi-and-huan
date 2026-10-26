@@ -45,11 +45,11 @@ function createPersonalApp({dataDir,assetsDir,model='qwen3.5:4b-q4_K_M',edition,
     if(url.pathname.startsWith('/api/')){
       if(!authenticated(request))return json({error:'本机会话尚未建立，请刷新本机页面。',signIn:'/'},401);
       const demo=request.headers.get('x-demo-mode')!=='0'&&!(request.method==='GET'&&url.pathname.startsWith('/api/media/')&&url.searchParams.get('mode')==='live'),key=request.headers.get('x-demo-actor')||'lin';
-      const profile=demo?DEMO_ACTORS[key]:community?{name:community.user.nickname,role:'member',initial:community.user.nickname.slice(0,1)}:{name:'本机用户',role:'admin',initial:'本'};
+      const profile=demo?DEMO_ACTORS[key]:community?{name:community.user.nickname,role:community.user.role==='admin'?'admin':'member',initial:community.user.nickname.slice(0,1)}:{name:'本机用户',role:'admin',initial:'本'};
       if(!profile)return json({error:'无效体验角色。'},400);
       const shared=!demo&&community;
       const store=new Store(shared?community.db:db,shared?community.space:(demo?'demo:':'')+(edition==='local'?'offline':edition)+':'+owner);
-      const service=new Service(store,{actor:demo?key:community?community.user.id:owner,role:profile.role,profile,demo,env:shared?{...env,BUCKET:community.bucket}:env,runtime:{type:edition==='local'?'standalone-offline':'standalone-api',identity:shared?'community':'personal',offlineAccepted:false}});
+      const service=new Service(store,{actor:demo?key:community?community.user.id:owner,role:profile.role,profile,demo,env:shared?{...env,BUCKET:community.bucket}:env,runtime:{type:edition==='local'?'standalone-offline':'standalone-api',identity:shared?'community':'personal',offlineAccepted:false,supportAdminConfigured:shared?!!community.adminConfigured:false}});
       const selectedModel=request.headers.get('x-migui-api-model');
       if(edition==='api'&&selectedModel){if(![apiConfig.model,...(apiConfig.allowedModels||[])].includes(selectedModel))return json({error:'该模型未获服务端授权。'},400);service.ctx.env={...service.ctx.env,LLM_MODEL:selectedModel};}
       const response=await handleApi(request,service);

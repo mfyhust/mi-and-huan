@@ -14,7 +14,7 @@ function create(f){return createRemoteDemo({origin,code:'765432',accessScope:'la
 
 test('账号密码采用独立盐与scrypt，公开信息和数据库均不含明文密码',async()=>{
  const f=fixture(),db=new AccountStore(join(f.dir,'auth.sqlite'));try{
-  const a=await db.register(input('alpha')),b=await db.register(input('beta'));assert.deepEqual(Object.keys(a).sort(),['id','nickname','username']);
+  const a=await db.register(input('alpha')),b=await db.register(input('beta'));assert.deepEqual(Object.keys(a).sort(),['id','nickname','role','username']);
   const rows=db.db.prepare('SELECT salt,password_hash FROM accounts').all();assert.notEqual(rows[0].salt,rows[1].salt);assert.notEqual(rows[0].password_hash,rows[1].password_hash);assert.equal(rows[0].password_hash.length,128);
   assert.equal((await db.login({username:'ALPHA',password})).id,a.id);await assert.rejects(()=>db.login({username:'alpha',password:'bad'}),/用户名或密码/);await assert.rejects(()=>db.login({username:'missing',password}),/用户名或密码/);
   assert.equal(JSON.stringify(rows).includes(password),false);
